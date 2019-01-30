@@ -1,0 +1,65 @@
+<div style="text-align:center" class="container">
+  <h2>
+    {{ title }}
+  </h2>
+  <br>
+  <div>
+    <div>
+      <h4>Track Air Quality</h4>
+    </div>
+    <br>
+    <div>
+      <div class='row'>
+        <div class='col-md-4'>Search :</div>
+        <div class='col-md-4'>
+          <input type='text' [(ngModel)]='listFilter' placeholder=" Enter 2 letter ISO country code" />
+        </div>
+        <div class="col-md-4">
+          <a href="http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html" target="blank">Check ISO code here :)</a>
+        </div>
+      </div><br>
+
+      <!-- Tabuler View  -->
+      <div class='row'>
+        <div class='table-responsive col-md-5'>
+          <table class='table table-dark table-hover' *ngIf='aqData'>
+            <thead class="thead-light">
+              <tr>
+                <th>City</th>
+                <th>Location</th>
+                <th>PM(µg/m3)</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor='let data of countryData | paginate: { itemsPerPage: 4, currentPage: p }'>
+                <td>
+                  <button class="btn btn-primary" (click)="setcenter(data.coordinates.latitude, data.coordinates.longitude, data.city, data.value)">
+                    {{ data.city }}
+                  </button>
+
+                </td>
+                <td>{{ data.location }}</td>
+                <td>{{ data.value }}</td>
+                <td>{{ data.date.local | date:'medium' }}</td>
+              </tr>
+            </tbody>
+            
+          </table>
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+
+        <!-- Map view -->
+        <div class="col-md-7">
+          <div #gmap style="width:110%;height:600px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf='errorMessage' class='alert alert-danger'>
+    Error: {{ errorMessage }}
+  </div>
+
+
+</div>
